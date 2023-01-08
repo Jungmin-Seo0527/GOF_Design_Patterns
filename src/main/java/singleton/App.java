@@ -1,20 +1,38 @@
 package singleton;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
-        // 싱글톤 패턴 구현 방법1
-        Settings1 settings11 = Settings1.getInstance();
-        Settings1 settings12 = Settings1.getInstance();
-        System.out.println(settings11 == settings12);
+        // 싱글톤 패턴 구현 깨트리는 방법1 -> 리플레션
+        Settings5 settings51 = Settings5.getInstance();
 
-        //싱글톤 패턴 구현 방법2
-        Settings2 settings21 = Settings2.getInstance();
-        Settings2 settings22 = Settings2.getInstance();
-        System.out.println(settings21 == settings22);
-        
+        Constructor<Settings5> declaredConstructor = Settings5.class.getDeclaredConstructor();
+        declaredConstructor.setAccessible(true);
+        Settings5 settings52 = declaredConstructor.newInstance();
+        System.out.println("리플렉션 사용: " + (settings51 == settings52));
+
+        // 싱글톤 패턴 구현 깨트리는 방법2 -> 직렬화 & 역직렬화
+        Settings5 settings53 = Settings5.getInstance();
+        Settings5 settings54 = null;
+        try (ObjectOutput out = new ObjectOutputStream(new FileOutputStream("settings53.obj"))) {
+            out.writeObject(settings53);
+        }
+        try (ObjectInput in = new ObjectInputStream(new FileInputStream("settings53.obj"))) {
+            settings54 = (Settings5) in.readObject();
+        }
+        System.out.println(settings53 == settings54);
     }
 }
