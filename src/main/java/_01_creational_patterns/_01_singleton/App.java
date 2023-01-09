@@ -1,7 +1,6 @@
-package singleton;
+package _01_creational_patterns._01_singleton;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -10,7 +9,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 public class App {
 
@@ -33,6 +31,30 @@ public class App {
         try (ObjectInput in = new ObjectInputStream(new FileInputStream("settings53.obj"))) {
             settings54 = (Settings5) in.readObject();
         }
+        System.out.println("직렬화 역직렬화로 싱글톤 패턴 깨트리기");
         System.out.println(settings53 == settings54);
+
+        Settings6 settings61 = Settings6.INSTANCE;
+        Settings6 settings62 = null;
+        Constructor<?>[] declaredConstructors = Settings6.class.getDeclaredConstructors();
+        for (Constructor<?> constructor : declaredConstructors) {
+            constructor.setAccessible(true);
+            // settings62 = (Settings6) constructor.newInstance("INSTANCE");
+        }
+        System.out.println("ENUM으로 리플랙션 구현으로도 싱글톤 패턴 유지");
+        System.out.println(settings61.equals(settings62));
+
+        Settings6 settings63 = Settings6.INSTANCE;
+        Settings6 settings64 = null;
+        try (ObjectOutput out = new ObjectOutputStream(new FileOutputStream("settings63.obj"))) {
+            out.writeObject(settings63);
+        }
+        try (ObjectInput in = new ObjectInputStream(new FileInputStream("settings63.obj"))) {
+            settings64 = (Settings6) in.readObject();
+        }
+
+        System.out.println("ENUM으로 직렬화 역직렬화에도 싱글톤 유지");
+        System.out.println(settings63 == settings64);
+
     }
 }

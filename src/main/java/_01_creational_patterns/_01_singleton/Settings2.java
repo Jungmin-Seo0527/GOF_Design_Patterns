@@ -1,4 +1,4 @@
-package singleton;
+package _01_creational_patterns._01_singleton;
 
 /**
  * 싱글톤 패턴 구현 방법2<br>

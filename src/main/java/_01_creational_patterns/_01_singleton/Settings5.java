@@ -1,4 +1,4 @@
-package singleton;
+package _01_creational_patterns._01_singleton;
 
 import java.io.Serial;
 import java.io.Serializable;
